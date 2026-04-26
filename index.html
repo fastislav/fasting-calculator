@@ -3,791 +3,395 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Калькулятор интервального голодания | FastIslav</title>
+  <title>🔮 Магические Калькуляторы | ArcaneCalc</title>
+  <meta name="description" content="Более 150 бесплатных онлайн-калькуляторов: финансы, здоровье, строительство, математика. Точность, скорость, магия чисел." />
   
-  <!-- SEO Meta -->
-  <meta name="description" content="Бесплатный калькулятор интервального голодания: 16/8, 18/6, 20/4, OMAD. Рассчитайте своё окно питания, отслеживайте прогресс и получайте уведомления." />
-  <meta name="keywords" content="интервальное голодание, калькулятор, 16/8, похудение, автофагия, кетоз" />
-  <meta name="author" content="FastIslav" />
-  <meta name="robots" content="index, follow" />
-  
-  <!-- Open Graph -->
-  <meta property="og:title" content="Калькулятор интервального голодания | FastIslav" />
-  <meta property="og:description" content="Рассчитайте своё идеальное окно питания. Просто, честно, без стресса." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://fastislav.github.io/fasting-calculator" />
-  <meta property="og:image" content="https://fastislav.github.io/fasting-calculator/og-image.jpg" />
-  
-  <!-- Schema.org -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Калькулятор интервального голодания",
-    "description": "Инструмент для расчёта окна питания при интервальном голодании",
-    "applicationCategory": "HealthApplication",
-    "operatingSystem": "Any",
-    "offers": { "@type": "Offer", "price": "0" }
-  }
-  </script>
-
   <style>
     :root {
-      --bg: #f8f9fa;
-      --card: #fff;
-      --text: #212529;
-      --primary: #4361ee;
-      --secondary: #3f37c9;
-      --accent: #4cc9f0;
-      --border: #dee2e6;
-      --shadow: 0 4px 12px rgba(0,0,0,0.08);
-      --success: #2ecc71;
-      --warning: #f39c12;
-      --danger: #e74c3c;
+      --bg-deep: #0b0c10;
+      --bg-mid: #1f2833;
+      --glass: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --text-main: #e5e5e5;
+      --text-muted: #a0a0a0;
+      --accent: #c5a0ff;
+      --accent-glow: #9d4edd;
+      --gold: #ffd166;
+      --gold-glow: #e09f3e;
+      --success: #06d6a0;
+      --radius: 16px;
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      --font-main: 'Inter', system-ui, sans-serif;
+      --font-heading: 'Playfair Display', serif;
     }
-    [data-theme="dark"] {
-      --bg: #121212;
-      --card: #1e1e1e;
-      --text: #f8f9fa;
-      --primary: #5a72f5;
-      --secondary: #4d5fe8;
-      --accent: #64d2ff;
-      --border: #333;
-      --shadow: 0 4px 12px rgba(0,0,0,0.3);
-    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      padding: 20px;
-      transition: background 0.3s, color 0.3s;
+      background: radial-gradient(circle at 10% 20%, #1a0b2e 0%, #0b0c10 40%, #050508 100%);
+      color: var(--text-main);
+      font-family: var(--font-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.5;
     }
-    .container { max-width: 800px; margin: 0 auto; }
-    header { text-align: center; padding: 2rem 1rem; }
-    h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
-    .subtitle { color: #6c757d; margin-bottom: 1.5rem; }
-    [data-theme="dark"] .subtitle { color: #adb5bd; }
-    
-    .card {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-    }
-    
-    .protocol-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 10px;
-      margin-bottom: 1.2rem;
-    }
-    .protocol-btn {
-      padding: 10px 8px;
-      border: 2px solid var(--border);
-      background: var(--card);
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 500;
-      transition: all 0.2s;
-      text-align: center;
-    }
-    .protocol-btn.active, .protocol-btn:hover {
-      border-color: var(--primary);
-      background: rgba(67, 97, 238, 0.08);
-      color: var(--primary);
-    }
-    [data-theme="dark"] .protocol-btn.active {
-      background: rgba(90, 114, 245, 0.15);
-    }
-    
-    .time-input {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin: 1rem 0;
-      flex-wrap: wrap;
-    }
-    input[type="time"] {
-      padding: 10px 14px;
-      border: 2px solid var(--border);
-      border-radius: 10px;
-      font-size: 1rem;
-      background: var(--card);
-      color: var(--text);
-      min-width: 140px;
-    }
-    .calculate-btn {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-      font-size: 1rem;
-    }
-    .calculate-btn:hover { background: var(--secondary); }
-    
-    .results { display: none; margin-top: 1.5rem; }
-    .results.show { display: block; animation: fadeIn 0.4s; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    
-    .timeline {
-      display: flex;
-      justify-content: space-between;
-      margin: 1.5rem 0;
-      position: relative;
-      padding: 0 10px;
-    }
-    .timeline::before {
+
+    /* Magical floating particles (pure CSS) */
+    body::before {
       content: '';
-      position: absolute;
-      top: 20px;
-      left: 30px;
-      right: 30px;
-      height: 4px;
-      background: var(--border);
-      border-radius: 2px;
-      z-index: 1;
-    }
-    .timeline-step {
-      text-align: center;
-      position: relative;
-      z-index: 2;
-      flex: 1;
-      min-width: 70px;
-    }
-    .step-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--primary);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 8px;
-      font-size: 1.1rem;
-      font-weight: bold;
-    }
-    .step-label { font-size: 0.85rem; font-weight: 500; }
-    .step-time { font-size: 0.8rem; color: #6c757d; margin-top: 4px; }
-    [data-theme="dark"] .step-time { color: #adb5bd; }
-    
-    .share-buttons {
-      display: flex;
-      gap: 10px;
-      margin: 1.2rem 0;
-      flex-wrap: wrap;
-    }
-    .share-btn {
-      flex: 1;
-      min-width: 120px;
-      padding: 10px;
-      border: none;
-      border-radius: 10px;
-      background: var(--border);
-      color: var(--text);
-      cursor: pointer;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: background 0.2s;
-    }
-    .share-btn:hover { background: var(--accent); color: white; }
-    .share-btn.telegram { background: #0088cc; color: white; }
-    .share-btn.vk { background: #0077ff; color: white; }
-    
-    .disclaimer {
-      font-size: 0.85rem;
-      color: #6c757d;
-      text-align: center;
-      margin-top: 1.5rem;
-      padding-top: 1rem;
-      border-top: 1px dashed var(--border);
-    }
-    
-    /* Dark theme toggle */
-    .theme-toggle {
       position: fixed;
-      top: 16px;
-      right: 16px;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: var(--card);
-      border: 2px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: 
+        radial-gradient(2px 2px at 20px 30px, var(--accent), transparent),
+        radial-gradient(2px 2px at 40px 70px, var(--gold), transparent),
+        radial-gradient(3px 3px at 80px 20px, var(--accent-glow), transparent),
+        radial-gradient(2px 2px at 120px 50px, var(--gold-glow), transparent),
+        radial-gradient(2px 2px at 60px 90px, var(--accent), transparent),
+        radial-gradient(3px 3px at 150px 40px, var(--gold), transparent);
+      background-size: 200px 120px;
+      animation: floatParticles 20s linear infinite;
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 0;
+    }
+    @keyframes floatParticles { to { background-position: 200px 120px; } }
+
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(11, 12, 16, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 1rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo {
+      font-family: var(--font-heading);
+      font-size: 1.6rem;
+      color: var(--gold);
+      text-shadow: 0 0 10px rgba(255, 209, 102, 0.4);
+    }
+    .logo span { color: var(--accent); }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 2rem;
+      padding: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      backdrop-filter: blur(10px);
+      height: fit-content;
+      position: sticky; top: 100px;
+    }
+    .cat-title {
+      font-weight: 600; margin-bottom: 0.6rem; color: var(--gold);
+      font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;
+    }
+    .nav-list { list-style: none; margin-bottom: 1.5rem; }
+    .nav-list li {
+      padding: 0.6rem 0.8rem;
+      border-radius: 10px;
       cursor: pointer;
-      font-size: 1.2rem;
-      z-index: 100;
+      transition: all 0.2s;
+      margin-bottom: 4px;
+      font-size: 0.95rem;
+    }
+    .nav-list li:hover, .nav-list li.active {
+      background: linear-gradient(135deg, rgba(157, 78, 221, 0.2), rgba(255, 209, 102, 0.15));
+      color: #fff;
+      transform: translateX(4px);
+    }
+
+    /* Main Content */
+    main {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      backdrop-filter: blur(12px);
       box-shadow: var(--shadow);
-      transition: all 0.3s;
+      min-height: 60vh;
     }
-    .theme-toggle:hover { transform: scale(1.05); }
-    
-    /* Weight tracker */
-    .weight-section { margin-top: 1rem; }
-    .weight-inputs {
-      display: flex;
-      gap: 10px;
-      margin: 10px 0;
-      flex-wrap: wrap;
+    h1 { font-family: var(--font-heading); margin-bottom: 1.5rem; color: var(--accent); }
+    .calc-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; margin-bottom: 1.5rem; }
+    .input-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    label { font-size: 0.9rem; color: var(--text-muted); }
+    input, select {
+      padding: 0.8rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      color: var(--text-main);
+      font-size: 1rem;
+      transition: border 0.2s;
     }
-    .weight-inputs input {
-      flex: 1;
-      min-width: 100px;
-      padding: 8px 12px;
-      border: 2px solid var(--border);
-      border-radius: 8px;
-      background: var(--card);
-      color: var(--text);
-    }
-    .weight-btn {
-      background: var(--success);
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 500;
-    }
-    .chart-container {
-      height: 150px;
-      margin: 15px 0;
-      position: relative;
-      background: rgba(67,97,238,0.05);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-    .chart-bar {
-      position: absolute;
-      bottom: 0;
-      width: 20px;
-      background: var(--primary);
-      border-radius: 4px 4px 0 0;
-      transition: height 0.3s;
-    }
-    .chart-label {
-      position: absolute;
-      bottom: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 0.75rem;
-      color: #6c757d;
-    }
-    
-    /* Calendar export */
-    .calendar-section { margin-top: 1rem; }
-    .calendar-btn {
-      width: 100%;
-      padding: 12px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 12px;
+    input:focus, select:focus { outline: none; border-color: var(--accent); }
+    .btn {
+      padding: 0.9rem 1.5rem;
+      background: linear-gradient(135deg, var(--accent-glow), var(--gold-glow));
+      color: #000;
       font-weight: 600;
+      border: none;
+      border-radius: 12px;
       cursor: pointer;
-      margin: 8px 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 0.5rem;
     }
-    .calendar-btn:hover { opacity: 0.95; }
-    
-    /* Notifications */
-    .notify-section { margin-top: 1rem; }
-    .notify-toggle {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(157, 78, 221, 0.4); }
+    .result-box {
+      background: rgba(6, 214, 160, 0.1);
+      border: 1px solid rgba(6, 214, 160, 0.3);
+      padding: 1.2rem;
+      border-radius: 12px;
+      margin-top: 1rem;
+      min-height: 60px;
+      font-size: 1.1rem;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .result-box.show { opacity: 1; }
+    .result-box strong { color: var(--gold); }
+
+    /* Grid for all calculators */
+    .calc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
+    .calc-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      padding: 1.2rem;
       cursor: pointer;
+      transition: all 0.25s;
     }
-    .toggle-switch {
-      position: relative;
-      width: 48px;
-      height: 26px;
-      background: var(--border);
-      border-radius: 13px;
-      transition: background 0.3s;
-    }
-    .toggle-switch::after {
-      content: '';
-      position: absolute;
-      width: 22px;
-      height: 22px;
-      background: white;
-      border-radius: 50%;
-      top: 2px;
-      left: 2px;
-      transition: transform 0.3s;
-    }
-    .notify-toggle.active .toggle-switch {
-      background: var(--success);
-    }
-    .notify-toggle.active .toggle-switch::after {
-      transform: translateX(22px);
-    }
-    
+    .calc-card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 10px 24px rgba(0,0,0,0.3); }
+    .calc-card h3 { color: var(--gold); margin-bottom: 0.4rem; }
+    .calc-card p { font-size: 0.9rem; color: var(--text-muted); }
+
     footer {
-      text-align: center;
-      padding: 2rem 1rem 3rem;
-      color: #6c757d;
-      font-size: 0.9rem;
+      text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.9rem;
+      border-top: 1px solid var(--glass-border); margin-top: 3rem;
     }
-    [data-theme="dark"] footer { color: #adb5bd; }
-    
-    @media (max-width: 600px) {
-      .timeline::before { left: 20px; right: 20px; }
-      .step-label { font-size: 0.75rem; }
-      .step-time { font-size: 0.7rem; }
+
+    @media (max-width: 800px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; margin-bottom: 1rem; }
     }
   </style>
 </head>
 <body>
-  <!-- Dark theme toggle -->
-  <div class="theme-toggle" id="themeToggle" aria-label="Переключить тему">🌙</div>
+  <header>
+    <div class="logo">🔮 Arcane<span>Calc</span></div>
+    <div style="font-size:0.9rem; color:var(--text-muted)">v1.0 | Магия чисел</div>
+  </header>
 
-  <div class="container">
-    <header>
-      <h1>Калькулятор окна голодания</h1>
-      <p class="subtitle">Простой и честный инструмент, чтобы сжигать жир легко и без стресса</p>
-    </header>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="cat-title">📂 Категории</div>
+      <ul class="nav-list" id="navCategories">
+        <!-- Generated by JS -->
+      </ul>
+    </aside>
 
-    <main>
-      <!-- Protocol selection -->
-      <section class="card">
-        <h2 style="margin-bottom:1rem">Выбери протокол голодания</h2>
-        <div class="protocol-grid">
-          <button class="protocol-btn active" data-hours="16">16/8</button>
-          <button class="protocol-btn" data-hours="18">18/6</button>
-          <button class="protocol-btn" data-hours="20">20/4</button>
-          <button class="protocol-btn" data-hours="14">14/10</button>
-          <button class="protocol-btn" data-hours="23">OMAD</button>
-        </div>
-        
-        <div class="time-input">
-          <label for="startTime">Когда планируешь начать окно питания?</label>
-          <input type="time" id="startTime" value="12:00" />
-        </div>
-        
-        <button class="calculate-btn" id="calculateBtn">РАССЧИТАТЬ МОЁ ОКНО</button>
-      </section>
-
-      <!-- Results -->
-      <section class="card results" id="results">
-        <h2>🎯 Твои результаты</h2>
-        <p style="margin:1rem 0"><strong>Окно питания:</strong> <span id="eatingWindow"></span></p>
-        <p><strong>Окно голода:</strong> <span id="fastingWindow"></span></p>
-        
-        <div class="timeline">
-          <div class="timeline-step">
-            <div class="step-icon">🍔</div>
-            <div class="step-label">Питание</div>
-            <div class="step-time" id="timeEat"></div>
-          </div>
-          <div class="timeline-step">
-            <div class="step-icon">🔥</div>
-            <div class="step-label">Жир</div>
-            <div class="step-time" id="timeFat"></div>
-          </div>
-          <div class="timeline-step">
-            <div class="step-icon">🧠</div>
-            <div class="step-label">Кетоз</div>
-            <div class="step-time" id="timeKeto"></div>
-          </div>
-          <div class="timeline-step">
-            <div class="step-icon">♻️</div>
-            <div class="step-label">Автофагия</div>
-            <div class="step-time" id="timeAutophagy"></div>
-          </div>
-        </div>
-
-        <!-- Share buttons -->
-        <div class="share-buttons">
-          <button class="share-btn telegram" id="shareTelegram">
-            <span>✈️</span> Telegram
-          </button>
-          <button class="share-btn vk" id="shareVK">
-            <span>💙</span> VK
-          </button>
-        </div>
-
-        <!-- Weight tracker -->
-        <div class="weight-section">
-          <h3>📊 Трекер веса</h3>
-          <div class="weight-inputs">
-            <input type="number" id="weightInput" placeholder="Вес (кг)" step="0.1" min="30" max="300" />
-            <input type="date" id="weightDate" />
-            <button class="weight-btn" id="addWeight">Добавить</button>
-          </div>
-          <div class="chart-container" id="weightChart"></div>
-        </div>
-
-        <!-- Calendar export -->
-        <div class="calendar-section">
-          <h3>📅 Экспорт в календарь</h3>
-          <button class="calendar-btn" id="exportGoogle">
-            🌐 Добавить в Google Календарь
-          </button>
-          <button class="calendar-btn" id="exportICS">
-            📥 Скачать .ics файл
-          </button>
-        </div>
-
-        <!-- Notifications -->
-        <div class="notify-section">
-          <h3>🔔 Уведомления</h3>
-          <div class="notify-toggle" id="notifyToggle">
-            <div class="toggle-switch"></div>
-            <span>Включить напоминания о начале/окончании окна</span>
-          </div>
-          <p style="font-size:0.8rem;color:#6c757d;margin-top:8px">
-            *Разрешите уведомления в браузере для работы функции
-          </p>
-        </div>
-      </section>
-
-      <p class="disclaimer">
-        Это не медицинская рекомендация. Консультируйся с врачом перед началом любых изменений в питании.
-      </p>
+    <main id="mainArea">
+      <h1>✨ Добро пожаловать в мир расчётов</h1>
+      <p style="margin-bottom:1.5rem; color:var(--text-muted)">Выберите калькулятор в меню или начните с коллекции ниже. Все инструменты бесплатны и работают мгновенно.</p>
+      <div class="calc-grid" id="calcGrid">
+        <!-- Generated by JS -->
+      </div>
     </main>
-
-    <footer>
-      Сделано в России ❤️ для тех, кто хочет менять жизнь шаг за шагом
-    </footer>
   </div>
 
+  <footer>
+    Создано для точности, скорости и лёгкости. Консультируйтесь со специалистами в финансовых и медицинских вопросах.
+  </footer>
+
   <script>
-    // ===== GLOBAL STATE =====
-    const state = {
-      fastingHours: 16,
-      startTime: '12:00',
-      eatingStart: null,
-      eatingEnd: null,
-      weights: JSON.parse(localStorage.getItem('fasting_weights')) || [],
-      notificationsEnabled: localStorage.getItem('fasting_notifications') === 'true',
-      theme: localStorage.getItem('fasting_theme') || 'light'
-    };
+    // ===== РЕЕСТР КАЛЬКУЛЯТОРОВ =====
+    // Чтобы добавить новый: скопируйте блок, измените id, title, category, fields, calculate
+    const CALCULATORS = [
+      {
+        id: 'bmi',
+        title: 'Индекс массы тела (ИМТ)',
+        category: 'Здоровье',
+        desc: 'Оценка соотношения веса и роста.',
+        fields: [
+          { id: 'weight', label: 'Вес (кг)', type: 'number', step: '0.1', min: 20, max: 300 },
+          { id: 'height', label: 'Рост (см)', type: 'number', step: '1', min: 100, max: 250 }
+        ],
+        calculate: ({weight, height}) => {
+          if (!weight || !height) return 'Заполните все поля';
+          const h = height / 100;
+          const bmi = (weight / (h * h)).toFixed(1);
+          let status = '';
+          if (bmi < 18.5) status = 'Недостаток';
+          else if (bmi < 25) status = 'Норма';
+          else if (bmi < 30) status = 'Избыток';
+          else status = 'Ожирение';
+          return `<strong>ИМТ:</strong> ${bmi} | <strong>Статус:</strong> ${status}`;
+        }
+      },
+      {
+        id: 'loan',
+        title: 'Кредитный калькулятор',
+        category: 'Финансы',
+        desc: 'Ежемесячный платёж и переплата.',
+        fields: [
+          { id: 'sum', label: 'Сумма (₽)', type: 'number' },
+          { id: 'rate', label: 'Ставка (% годовых)', type: 'number', step: '0.1' },
+          { id: 'term', label: 'Срок (месяцев)', type: 'number' }
+        ],
+        calculate: ({sum, rate, term}) => {
+          if (!sum || !rate || !term) return 'Заполните все поля';
+          const r = (rate / 100) / 12;
+          const payment = sum * (r * Math.pow(1 + r, term)) / (Math.pow(1 + r, term) - 1);
+          const total = payment * term;
+          const overpay = total - sum;
+          return `<strong>Платёж:</strong> ${payment.toFixed(2)} ₽/мес<br><strong>Переплата:</strong> ${overpay.toFixed(2)} ₽<br><strong>Всего:</strong> ${total.toFixed(2)} ₽`;
+        }
+      },
+      {
+        id: 'date-diff',
+        title: 'Разница между датами',
+        category: 'Время',
+        desc: 'Точное количество дней, часов, минут.',
+        fields: [
+          { id: 'start', label: 'Начало', type: 'datetime-local' },
+          { id: 'end', label: 'Конец', type: 'datetime-local' }
+        ],
+        calculate: ({start, end}) => {
+          if (!start || !end) return 'Выберите обе даты';
+          const s = new Date(start), e = new Date(end);
+          const diffMs = Math.abs(e - s);
+          const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const mins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+          return `<strong>Разница:</strong> ${days} дн. ${hours} ч. ${mins} мин.`;
+        }
+      },
+      {
+        id: 'converter',
+        title: 'Конвертер единиц',
+        category: 'Математика',
+        desc: 'Длина, вес, температура и др.',
+        fields: [
+          { id: 'type', label: 'Тип', type: 'select', options: ['Длина', 'Вес'] },
+          { id: 'value', label: 'Значение', type: 'number' },
+          { id: 'from', label: 'Из', type: 'select', options: ['м → км', 'км → м', 'кг → г', 'г → кг'] },
+          { id: 'to', label: 'В', type: 'text', disabled: true, placeholder: 'Результат' }
+        ],
+        calculate: ({type, value, from}) => {
+          if (!value) return 'Введите число';
+          const [f, t] = from.split(' → ');
+          let res;
+          if (f === 'м' && t === 'км') res = value / 1000;
+          else if (f === 'км' && t === 'м') res = value * 1000;
+          else if (f === 'кг' && t === 'г') res = value * 1000;
+          else if (f === 'г' && t === 'кг') res = value / 1000;
+          return `<strong>Результат:</strong> ${res} ${t}`;
+        }
+      },
+      {
+        id: 'fasting',
+        title: 'Интервальное голодание',
+        category: 'Здоровье',
+        desc: 'Расчёт окна питания и процессов.',
+        fields: [
+          { id: 'protocol', label: 'Протокол', type: 'select', options: ['16/8', '18/6', '20/4', '14/10', 'OMAD (23/1)'] },
+          { id: 'start', label: 'Начало питания', type: 'time' }
+        ],
+        calculate: ({protocol, start}) => {
+          if (!start) return 'Укажите время';
+          const [h, m] = start.split(':').map(Number);
+          const fasting = parseInt(protocol.match(/\d+/)[0]);
+          const eating = 24 - fasting;
+          const s = new Date(); s.setHours(h, m);
+          const e = new Date(s); e.setHours(e.getHours() + eating);
+          const fmt = d => d.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'});
+          return `<strong>Окно питания:</strong> ${fmt(s)} — ${fmt(e)}<br><strong>Голод:</strong> ${eating}ч / ${fasting}ч`;
+        }
+      }
+    ];
 
-    // ===== DOM ELEMENTS =====
+    // ===== ДВИЖОК =====
     const els = {
-      themeToggle: document.getElementById('themeToggle'),
-      protocolBtns: document.querySelectorAll('.protocol-btn'),
-      startTimeInput: document.getElementById('startTime'),
-      calculateBtn: document.getElementById('calculateBtn'),
-      results: document.getElementById('results'),
-      eatingWindow: document.getElementById('eatingWindow'),
-      fastingWindow: document.getElementById('fastingWindow'),
-      timeEat: document.getElementById('timeEat'),
-      timeFat: document.getElementById('timeFat'),
-      timeKeto: document.getElementById('timeKeto'),
-      timeAutophagy: document.getElementById('timeAutophagy'),
-      shareTelegram: document.getElementById('shareTelegram'),
-      shareVK: document.getElementById('shareVK'),
-      weightInput: document.getElementById('weightInput'),
-      weightDate: document.getElementById('weightDate'),
-      addWeightBtn: document.getElementById('addWeight'),
-      weightChart: document.getElementById('weightChart'),
-      exportGoogle: document.getElementById('exportGoogle'),
-      exportICS: document.getElementById('exportICS'),
-      notifyToggle: document.getElementById('notifyToggle')
+      nav: document.getElementById('navCategories'),
+      grid: document.getElementById('calcGrid'),
+      main: document.getElementById('mainArea')
     };
 
-    // ===== INIT =====
     function init() {
-      // Theme
-      if (state.theme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        els.themeToggle.textContent = '☀️';
-      }
-      
-      // Date input default = today
-      els.weightDate.valueAsDate = new Date();
-      
-      // Load saved start time
-      const savedTime = localStorage.getItem('fasting_start_time');
-      if (savedTime) els.startTimeInput.value = savedTime;
-      
-      // Load saved protocol
-      const savedProtocol = localStorage.getItem('fasting_protocol');
-      if (savedProtocol) {
-        els.protocolBtns.forEach(btn => {
-          if (btn.dataset.hours === savedProtocol) {
-            btn.classList.add('active');
-            state.fastingHours = parseInt(savedProtocol);
-          } else {
-            btn.classList.remove('active');
-          }
+      renderCategories();
+      renderGrid();
+    }
+
+    function renderCategories() {
+      const cats = [...new Set(CALCULATORS.map(c => c.category))];
+      els.nav.innerHTML = cats.map(cat => 
+        `<li onclick="filterCategory('${cat}')">${cat}</li>`
+      ).join('');
+    }
+
+    function renderGrid(filter = null) {
+      const list = filter ? CALCULATORS.filter(c => c.category === filter) : CALCULATORS;
+      els.grid.innerHTML = list.map(c => `
+        <div class="calc-card" onclick="openCalculator('${c.id}')">
+          <h3>${c.title}</h3>
+          <p>${c.desc}</p>
+        </div>
+      `).join('');
+    }
+
+    function filterCategory(cat) {
+      document.querySelectorAll('.nav-list li').forEach(li => li.classList.toggle('active', li.textContent === cat));
+      renderGrid(cat);
+    }
+
+    function openCalculator(id) {
+      const calc = CALCULATORS.find(c => c.id === id);
+      if (!calc) return;
+
+      const fieldsHTML = calc.fields.map(f => {
+        if (f.type === 'select') {
+          const opts = f.options.map(o => `<option value="${o}">${o}</option>`).join('');
+          return `<div class="input-group">
+            <label>${f.label}</label>
+            <select id="calc_${f.id}">${opts}</select>
+          </div>`;
+        }
+        const attrs = Object.entries(f).filter(([k,v]) => !['id','label','type'].includes(k)).map(([k,v]) => `${k}="${v}"`).join(' ');
+        return `<div class="input-group">
+          <label>${f.label}</label>
+          <input type="${f.type}" id="calc_${f.id}" ${attrs} />
+        </div>`;
+      }).join('');
+
+      els.main.innerHTML = `
+        <h1>🔮 ${calc.title}</h1>
+        <div class="calc-form">${fieldsHTML}</div>
+        <button class="btn" id="calcBtn">✨ Рассчитать</button>
+        <div class="result-box" id="calcResult"></div>
+        <button class="btn" style="background:transparent; border:1px solid var(--accent); margin-top:1rem; width:auto;" onclick="init()">← Вернуться к списку</button>
+      `;
+
+      document.getElementById('calcBtn').addEventListener('click', () => {
+        const data = {};
+        calc.fields.forEach(f => {
+          data[f.id] = document.getElementById(`calc_${f.id}`).value;
         });
-      }
-      
-      // Notifications toggle state
-      if (state.notificationsEnabled) {
-        els.notifyToggle.classList.add('active');
-        requestNotificationPermission();
-      }
-      
-      // Render weight chart
-      renderWeightChart();
-      
-      // Event listeners
-      setupEventListeners();
-    }
-
-    // ===== EVENT LISTENERS =====
-    function setupEventListeners() {
-      // Theme toggle
-      els.themeToggle.addEventListener('click', () => {
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        const newTheme = isDark ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', newTheme);
-        els.themeToggle.textContent = isDark ? '🌙' : '☀️';
-        localStorage.setItem('fasting_theme', newTheme);
-        state.theme = newTheme;
-      });
-
-      // Protocol selection
-      els.protocolBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          els.protocolBtns.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          state.fastingHours = parseInt(btn.dataset.hours);
-          localStorage.setItem('fasting_protocol', btn.dataset.hours);
-        });
-      });
-
-      // Calculate button
-      els.calculateBtn.addEventListener('click', calculateWindow);
-
-      // Share buttons
-      els.shareTelegram.addEventListener('click', () => shareResult('telegram'));
-      els.shareVK.addEventListener('click', () => shareResult('vk'));
-
-      // Weight tracker
-      els.addWeightBtn.addEventListener('click', addWeightEntry);
-      
-      // Calendar export
-      els.exportGoogle.addEventListener('click', exportToGoogleCalendar);
-      els.exportICS.addEventListener('click', exportToICS);
-      
-      // Notifications toggle
-      els.notifyToggle.addEventListener('click', toggleNotifications);
-    }
-
-    // ===== CALCULATION LOGIC =====
-    function calculateWindow() {
-      state.startTime = els.startTimeInput.value;
-      localStorage.setItem('fasting_start_time', state.startTime);
-      
-      const [startH, startM] = state.startTime.split(':').map(Number);
-      const eatingStart = new Date();
-      eatingStart.setHours(startH, startM, 0, 0);
-      
-      const eatingEnd = new Date(eatingStart);
-      eatingEnd.setHours(eatingEnd.getHours() + (24 - state.fastingHours));
-      
-      const fastingEnd = new Date(eatingStart);
-      fastingEnd.setHours(fastingEnd.getHours() + state.fastingHours);
-      
-      state.eatingStart = eatingStart;
-      state.eatingEnd = eatingEnd;
-      
-      // Format times
-      const fmt = d => d.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'});
-      
-      els.eatingWindow.textContent = `${fmt(eatingStart)} — ${fmt(eatingEnd)}`;
-      els.fastingWindow.textContent = `${fmt(eatingEnd)} — ${fmt(fastingEnd)}`;
-      
-      // Timeline times
-      els.timeEat.textContent = fmt(eatingStart);
-      els.timeFat.textContent = fmt(new Date(eatingStart.getTime() + 4*60*60*1000));
-      els.timeKeto.textContent = fmt(new Date(eatingStart.getTime() + 12*60*60*1000));
-      els.timeAutophagy.textContent = fmt(new Date(eatingStart.getTime() + 16*60*60*1000));
-      
-      // Show results
-      els.results.classList.add('show');
-      els.results.scrollIntoView({behavior:'smooth', block:'start'});
-      
-      // Schedule notifications if enabled
-      if (state.notificationsEnabled) {
-        scheduleNotifications(eatingStart, eatingEnd);
-      }
-    }
-
-    // ===== NOTIFICATIONS =====
-    function requestNotificationPermission() {
-      if ('Notification' in window && Notification.permission === 'default') {
-        Notification.requestPermission();
-      }
-    }
-
-    function scheduleNotifications(start, end) {
-      if (!('Notification' in window) || Notification.permission !== 'granted') return;
-      
-      // Clear existing
-      if (window.fastingNotificationTimeouts) {
-        window.fastingNotificationTimeouts.forEach(clearTimeout);
-      }
-      window.fastingNotificationTimeouts = [];
-      
-      const now = new Date();
-      const notifyAt = (time, msg) => {
-        const delay = time - now;
-        if (delay > 0 && delay < 24*60*60*1000) {
-          const id = setTimeout(() => {
-            new Notification('⏰ Интервальное голодание', { body: msg, icon: '/favicon.ico' });
-          }, delay);
-          window.fastingNotificationTimeouts.push(id);
-        }
-      };
-      
-      notifyAt(start, '🍽️ Начало окна питания!');
-      notifyAt(end, '🚫 Окончание окна питания. Начинается голод.');
-    }
-
-    function toggleNotifications() {
-      state.notificationsEnabled = !state.notificationsEnabled;
-      localStorage.setItem('fasting_notifications', state.notificationsEnabled);
-      els.notifyToggle.classList.toggle('active');
-      
-      if (state.notificationsEnabled) {
-        requestNotificationPermission();
-        if (state.eatingStart && state.eatingEnd) {
-          scheduleNotifications(state.eatingStart, state.eatingEnd);
-        }
-      } else {
-        if (window.fastingNotificationTimeouts) {
-          window.fastingNotificationTimeouts.forEach(clearTimeout);
-        }
-      }
-    }
-
-    // ===== WEIGHT TRACKER =====
-    function addWeightEntry() {
-      const weight = parseFloat(els.weightInput.value);
-      const date = els.weightDate.value;
-      
-      if (!weight || !date || weight < 30 || weight > 300) {
-        alert('Введите корректный вес (30-300 кг)');
-        return;
-      }
-      
-      // Remove existing entry for same date
-      state.weights = state.weights.filter(w => w.date !== date);
-      state.weights.push({ date, weight });
-      state.weights.sort((a,b) => new Date(a.date) - new Date(b.date));
-      
-      // Save & render
-      localStorage.setItem('fasting_weights', JSON.stringify(state.weights));
-      renderWeightChart();
-      
-      // Clear input
-      els.weightInput.value = '';
-    }
-
-    function renderWeightChart() {
-      els.weightChart.innerHTML = '';
-      if (state.weights.length === 0) {
-        els.weightChart.innerHTML = '<p style="text-align:center;color:#6c757d;margin-top:60px">Нет данных. Добавьте первый вес!</p>';
-        return;
-      }
-      
-      // Take last 7 entries
-      const data = state.weights.slice(-7);
-      const weights = data.map(d => d.weight);
-      const minW = Math.min(...weights) - 2;
-      const maxW = Math.max(...weights) + 2;
-      const range = maxW - minW || 1;
-      
-      data.forEach((entry, i) => {
-        const height = ((entry.weight - minW) / range) * 120 + 20;
-        const bar = document.createElement('div');
-        bar.className = 'chart-bar';
-        bar.style.height = `${height}px`;
-        bar.style.left = `${(i / data.length) * 100}%`;
-        bar.title = `${entry.date}: ${entry.weight} кг`;
-        
-        const label = document.createElement('div');
-        label.className = 'chart-label';
-        label.textContent = entry.date.slice(5);
-        
-        els.weightChart.appendChild(bar);
-        els.weightChart.appendChild(label);
+        const res = calc.calculate(data);
+        const box = document.getElementById('calcResult');
+        box.innerHTML = res;
+        box.classList.add('show');
       });
     }
 
-    // ===== SHARING =====
-    function shareResult(platform) {
-      const text = `Мой график интервального голодания:\n🍽️ Питание: ${els.eatingWindow.textContent}\n🚫 Голод: ${els.fastingWindow.textContent}\nРассчитано на https://fastislav.github.io/fasting-calculator`;
-      
-      const urls = {
-        telegram: `https://t.me/share/url?url=${encodeURIComponent('https://fastislav.github.io/fasting-calculator')}&text=${encodeURIComponent(text)}`,
-        vk: `https://vk.com/share.php?url=${encodeURIComponent('https://fastislav.github.io/fasting-calculator')}&title=${encodeURIComponent('Мой график голодания')}&comment=${encodeURIComponent(text)}`
-      };
-      
-      window.open(urls[platform], '_blank', 'width=600,height=400');
-    }
-
-    // ===== CALENDAR EXPORT =====
-    function exportToGoogleCalendar() {
-      if (!state.eatingStart || !state.eatingEnd) {
-        alert('Сначала рассчитайте окно питания');
-        return;
-      }
-      
-      const fmtGoogle = d => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-      const title = encodeURIComponent('🍽️ Окно питания (интервальное голодание)');
-      const details = encodeURIComponent(`Протокол: ${state.fastingHours}/${24-state.fastingHours}\nНачало: ${state.eatingStart.toLocaleString('ru-RU')}\nОкончание: ${state.eatingEnd.toLocaleString('ru-RU')}\n\nРассчитано на fastislav.github.io/fasting-calculator`);
-      const location = encodeURIComponent('Дом');
-      
-      const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${fmtGoogle(state.eatingStart)}/${fmtGoogle(state.eatingEnd)}&details=${details}&location=${location}&sf=true&output=xml`;
-      window.open(url, '_blank');
-    }
-
-    function exportToICS() {
-      if (!state.eatingStart || !state.eatingEnd) {
-        alert('Сначала рассчитайте окно питания');
-        return;
-      }
-      
-      const fmtICS = d => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-      const ics = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//FastIslav//Fasting Calculator//RU
-BEGIN:VEVENT
-UID:${Date.now()}@fastislav.github.io
-DTSTAMP:${fmtICS(new Date())}
-DTSTART:${fmtICS(state.eatingStart)}
-DTEND:${fmtICS(state.eatingEnd)}
-SUMMARY:🍽️ Окно питания (интервальное голодание)
-DESCRIPTION:Протокол: ${state.fastingHours}/${24-state.fastingHours}\\nРассчитано на https://fastislav.github.io/fasting-calculator
-LOCATION:Дом
-END:VEVENT
-END:VCALENDAR`;
-      
-      const blob = new Blob([ics], {type:'text/calendar;charset=utf-8'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'fasting-schedule.ics';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-
-    // ===== START =====
     document.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
