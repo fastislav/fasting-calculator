@@ -19,11 +19,11 @@
         <i class="fas fa-fire"></i> Интервальное голодание
       </div>
       <h1 class="text-5xl font-bold mb-2">Калькулятор<br>окна голодания</h1>
-      <p class="text-xl text-zinc-400">Простой инструмент для тех, кто хочет сжигать жир легко и без стресса</p>
+      <p class="text-xl text-zinc-400">Простой и честный инструмент, чтобы сжигать жир легко и без стресса</p>
       
-      <!-- Мотивирующая картинка -->
+      <!-- Новая мотивирующая картинка -->
       <div class="my-8 rounded-3xl overflow-hidden shadow-2xl">
-        <img src="https://picsum.photos/id/1015/1200/600" alt="Мотивация: прогресс и здоровье" class="w-full h-64 object-cover">
+        <img src="https://picsum.photos/id/1005/1200/600" alt="Прогресс и здоровье — ты справишься!" class="w-full h-64 object-cover">
       </div>
     </div>
 
@@ -43,7 +43,7 @@
 
         <div>
           <label class="block text-sm text-zinc-400 mb-2">Когда планируешь начать окно питания?</label>
-          <input type="time" id="startTime" value="12:00" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-lg focus:outline-none focus:border-emerald-500">
+          <input type="time" id="startTime" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 text-lg focus:outline-none focus:border-emerald-500">
         </div>
 
         <button onclick="calculate()" 
@@ -89,46 +89,51 @@
             </div>
           </div>
 
-          <div id="motivationText" class="text-emerald-400 text-center font-medium"></div>
+          <div id="motivationText" class="text-emerald-400 text-center font-medium text-lg"></div>
         </div>
 
         <button onclick="shareResult()" 
                 class="mt-6 w-full border border-zinc-700 hover:bg-zinc-800 py-4 rounded-3xl flex items-center justify-center gap-2">
           <i class="fas fa-share"></i>
-          Поделиться результатом
+          Поделиться результатом в Telegram / VK
         </button>
       </div>
     </div>
 
     <p class="text-center text-xs text-zinc-500 mt-10">
-      Это не медицинская рекомендация. Консультируйся с врачом.<br>
-      Сделано с ❤️ для тех, кто хочет менять жизнь шаг за шагом
+      Это не медицинская рекомендация. Консультируйся с врачом перед началом.<br>
+      Сделано в России ❤️ для тех, кто хочет менять жизнь шаг за шагом
     </p>
   </div>
 
   <script>
+    // Автоматически ставим московское время
+    function setMoscowTime() {
+      const now = new Date();
+      const moscowOffset = 3; // UTC+3
+      const utc = now.getUTCHours() * 60 + now.getUTCMinutes();
+      let moscowMinutes = (utc + moscowOffset * 60) % (24 * 60);
+      const hours = Math.floor(moscowMinutes / 60);
+      const minutes = moscowMinutes % 60;
+      const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+      document.getElementById('startTime').value = timeString;
+    }
+
     function calculate() {
       const protocol = document.getElementById('protocol').value;
       const startTimeStr = document.getElementById('startTime').value;
       
-      // Разбор протокола
       const [fastHours, eatHours] = protocol.split('/').map(Number);
       
-      // Время начала питания
-      const now = new Date();
       const [hours, minutes] = startTimeStr.split(':').map(Number);
-      const startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+      const startDate = new Date();
+      startDate.setHours(hours, minutes, 0, 0);
       
-      // Конец окна питания
       const endEating = new Date(startDate.getTime() + eatHours * 60 * 60 * 1000);
-      
-      // Начало следующего окна (завтра)
       const nextStart = new Date(startDate.getTime() + 24 * 60 * 60 * 1000);
       
-      // Форматирование времени
       const formatTime = (date) => date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
       
-      // Заполняем результаты
       document.getElementById('eatingWindow').innerHTML = `
         <div>
           <span class="text-emerald-400 text-sm">ОКНО ПИТАНИЯ</span><br>
@@ -145,34 +150,34 @@
         </div>
       `;
       
-      // Мотивационный текст
       let motivation = '';
-      if (fastHours >= 16) {
-        motivation = 'Отлично! Уже через 4–6 часов после начала голодания твой организм начнёт активно сжигать жир с живота и бёдер. Ты на правильном пути!';
+      if (fastHours >= 18) {
+        motivation = '🔥 Ты на правильном пути! Уже через несколько часов организм начнёт активно сжигать жир с живота и бёдер. Ты молодец!';
+      } else if (fastHours >= 16) {
+        motivation = 'Отлично! Сейчас твой организм переходит на сжигание жира вместо сахара. Держись — результат будет!';
       } else if (fastHours >= 14) {
-        motivation = 'Хороший мягкий старт. Уже сейчас гликоген заканчивается — скоро организм перейдёт на сжигание жира.';
+        motivation = 'Хороший мягкий старт. Уже сейчас запасы гликогена заканчиваются — скоро пойдёт жир.';
       } else {
-        motivation = 'Ты молодец, что пробуешь! Даже небольшое окно даёт результат, если делать это регулярно.';
+        motivation = 'Ты сделал первый шаг — это уже победа! Даже небольшое окно даёт результат, если делать регулярно.';
       }
       document.getElementById('motivationText').innerHTML = motivation;
       
-      // Показываем результаты
       document.getElementById('results').classList.remove('hidden');
       document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
     }
 
     function shareResult() {
-      const text = `Я только что рассчитал своё окно голодания! Попробуй сам: https://fastislav.github.io/fasting-calculator (когда сайт будет готов)`;
+      const text = `Я рассчитал своё окно голодания! Попробуй сам 👉 https://fastislav.github.io/fasting-calculator`;
       navigator.clipboard.writeText(text).then(() => {
-        alert('Ссылка скопирована в буфер! Можешь отправить друзьям или в чат ❤️');
+        alert('✅ Ссылка скопирована! Отправляй в Telegram или VK друзьям ❤️');
       });
     }
 
-    // Инициализация Tailwind
-    tailwind.config = {
-      content: [],
-      theme: { extend: {} }
-    };
+    // Запускаем автоматическое московское время
+    window.onload = setMoscowTime;
+
+    // Tailwind
+    tailwind.config = { content: [] };
   </script>
 </body>
 </html>
